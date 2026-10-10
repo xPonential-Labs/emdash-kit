@@ -6,7 +6,15 @@ its own theme, templates, seed content and wrangler config.
 
 ## Install (in a site's `cms/` folder)
 
-    npm i github:xPonential-Labs/emdash-kit#v1.0.0
+npm's defaults (`allow-git = none`, `allow-remote = none`) refuse git and remote-tarball
+dependencies, so each site vendors a packed release:
+
+    npm pack                                   # in this repo: emdash-kit-<version>.tgz
+    mkdir -p vendor && cp <kit>/emdash-kit-<version>.tgz vendor/
+    npm i ./vendor/emdash-kit-<version>.tgz    # in the site's cms/; commit vendor/
+
+To update a site, drop in the new tarball, `npm i` it, then build and deploy. The tarball is
+a built release of this repo, never edited.
 
 ## Use
 
