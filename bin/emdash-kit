@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# emdash-kit: the shared tools for the EmDash sites. Run in a site's cms/ folder.
+#
+#   emdash-kit content <brand> --local|--remote   load seed content into D1 and R2 (empty DB only)
+#   emdash-kit seed <brand>                       write .emdash/seed.json from seed/schema.json + seed/<brand>.json
+set -euo pipefail
+kit="$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)"
+cmd="${1:-}"; shift || true
+case "$cmd" in
+	content) exec "$kit/lib/content.sh" "$@" ;;
+	seed) BRAND="${1:-}" exec node "$kit/lib/brand.mjs" ;;
+	*) sed -n '2,6p' "$0" >&2; exit 3 ;;
+esac

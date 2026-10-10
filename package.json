@@ -1,0 +1,44 @@
+{
+	"name": "emdash-kit",
+	"version": "1.0.0",
+	"description": "Shared Worker entry, Astro config and content tools for EmDash sites on Cloudflare Workers (Free plan)",
+	"type": "module",
+	"license": "MIT",
+	"exports": {
+		"./worker": {
+			"types": "./worker.d.ts",
+			"default": "./worker.js"
+		},
+		"./config": "./config.mjs",
+		"./media-url": {
+			"types": "./media-url.d.ts",
+			"default": "./media-url.js"
+		}
+	},
+	"bin": {
+		"emdash-kit": "bin/emdash-kit"
+	},
+	"files": [
+		"bin",
+		"lib",
+		"worker.js",
+		"worker.d.ts",
+		"config.mjs",
+		"media-url.js",
+		"media-url.d.ts",
+		"README.md"
+	],
+	"scripts": {
+		"test": "node --test test/*.test.mjs"
+	},
+	"dependencies": {
+		"jsonc-parser": "^3.3.1"
+	},
+	"peerDependencies": {
+		"@astrojs/cloudflare": ">=14",
+		"@astrojs/react": ">=6",
+		"@emdash-cms/cloudflare": ">=1",
+		"astro": ">=7",
+		"emdash": ">=1"
+	}
+}
