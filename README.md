@@ -41,7 +41,10 @@ Every setting is explicit: `brands` (the allowed `BRAND` values, each a `src/the
 folder), `cachedPages` (route patterns cached an hour, with stale-while-revalidate for a day;
 media files are always cached a year), and optionally `devAllow` (extra folders the dev
 server may read, relative to the site). It uses D1 binding `DB`, R2 binding `MEDIA`, and
-Cloudflare route caching. A page render costs ~14 ms CPU against the Free plan's 10 ms;
+Cloudflare route caching. Images uploaded to EmDash are resized (WebP, a `srcset` of
+widths) by Cloudflare Images through the adapter's `IMAGES` binding. The site's own hosts are
+allowed for resizing, read from `wrangler.jsonc` (`EMDASH_SITE_URL` and the route patterns
+of the environment being built). Workers Free includes 5,000 unique transformations a month. A page render costs ~14 ms CPU against the Free plan's 10 ms;
 a cache hit costs next to nothing.
 
 **Media URL for CSS backgrounds**: `import { mediaUrl } from "emdash-kit/media-url"`

@@ -14,3 +14,17 @@ test("route rules: listed pages cached an hour, media a year", { skip: !routeRul
 	assert.deepEqual(r["/_emdash/api/media/file/[...key]"], { maxAge: 31536000 });
 	assert.throws(() => routeRulesFor([]));
 });
+
+let siteHosts;
+try { ({ siteHosts } = await import("../config.mjs")); } catch { siteHosts = null; }
+
+test("site hosts come from EMDASH_SITE_URL and route patterns, deduplicated", { skip: !siteHosts && "peer deps not installed" }, () => {
+	const w = `{ // comment
+		"env": { "a": {
+			"vars": { "EMDASH_SITE_URL": "https://example.com" },
+			"routes": [ { "pattern": "example.com/*", "zone_name": "example.com" }, { "pattern": "www.example.com/*", "zone_name": "example.com" } ],
+		} } }`;
+	assert.deepEqual(siteHosts(w, "a"), ["example.com", "www.example.com"]);
+	assert.throws(() => siteHosts(w, "missing"));
+	assert.deepEqual(siteHosts('{"env":{"b":{"vars":{}}}}', "b"), []);
+});

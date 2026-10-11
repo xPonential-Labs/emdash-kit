@@ -10,7 +10,9 @@ import react from "@astrojs/react";
 import { d1, r2 } from "@emdash-cms/cloudflare";
 import { defineConfig } from "astro/config";
 import emdash from "emdash/astro";
+import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { parse } from "jsonc-parser";
 
 const PAGE_CACHE = { maxAge: 3600, swr: 86400 };
 const MEDIA_ROUTE = "/_emdash/api/media/file/[...key]";
@@ -26,6 +28,19 @@ export function routeRulesFor(cachedPages) {
 	return rules;
 }
 
+// The site's own hostnames, read from wrangler.jsonc (EMDASH_SITE_URL and the route
+// patterns) so they have one home. Astro resizes a remote image only when its host is
+// allowed, and EmDash renders its uploads by absolute URL on the site's own domain, so
+// without these every image is served at full size.
+export function siteHosts(wranglerText, envName) {
+	const env = parse(wranglerText).env?.[envName];
+	if (!env) throw new Error(`emdashSite: wrangler.jsonc has no env "${envName}"`);
+	const hosts = new Set();
+	if (env.vars?.EMDASH_SITE_URL) hosts.add(new URL(env.vars.EMDASH_SITE_URL).hostname);
+	for (const r of env.routes ?? []) hosts.add(String(r.pattern ?? r).split("/")[0]);
+	return [...hosts];
+}
+
 export function emdashSite({ root, brands, cachedPages, devAllow }) {
 	if (!root) throw new Error("emdashSite: root is required (pass import.meta.url)");
 	if (!Array.isArray(brands) || brands.length === 0) throw new Error("emdashSite: brands is required");
@@ -37,6 +52,9 @@ export function emdashSite({ root, brands, cachedPages, devAllow }) {
 	const vite = { resolve: { alias: { "@theme": fileURLToPath(new URL(`./src/themes/${brand}`, root)) } } };
 	if (devAllow?.length) vite.server = { fs: { allow: devAllow.map((p) => fileURLToPath(new URL(p, root))) } };
 
+	const envName = process.env.CLOUDFLARE_ENV ?? brand;
+	const domains = siteHosts(readFileSync(fileURLToPath(new URL("./wrangler.jsonc", root)), "utf8"), envName);
+
 	return defineConfig({
 		output: "server",
 		adapter: cloudflare(),
@@ -45,7 +63,7 @@ export function emdashSite({ root, brands, cachedPages, devAllow }) {
 		// the page's tags on publish, so edits still show immediately.
 		cache: { provider: cacheCloudflare() },
 		routeRules: routeRulesFor(cachedPages),
-		image: { layout: "constrained", responsiveStyles: true },
+		image: { layout: "constrained", responsiveStyles: true, domains },
 		vite,
 		integrations: [
 			react(),
