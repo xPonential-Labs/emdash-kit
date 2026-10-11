@@ -26,7 +26,7 @@ export default {
 	...handler,
 	async fetch(request, env, ctx) {
 		if (adminGated(request, env)) return uncacheable(new Response("Not found", { status: 404 }));
-		return uncacheable(await handler.fetch(request, env, ctx));
+		return uncacheable(await handler.fetch(request, env, ctx), request);
 	},
 	scheduled,
 };

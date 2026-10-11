@@ -10,6 +10,7 @@ import react from "@astrojs/react";
 import { d1, r2 } from "@emdash-cms/cloudflare";
 import { defineConfig } from "astro/config";
 import emdash from "emdash/astro";
+import { google } from "emdash/auth/providers/google";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { parse } from "jsonc-parser";
@@ -58,8 +59,8 @@ export function emdashSite({ root, brands, cachedPages, devAllow }) {
 	return defineConfig({
 		output: "server",
 		adapter: cloudflare(),
-		// Serve rendered pages from Cloudflare's Worker cache. A render costs ~14 ms CPU,
-		// over the Free plan's 10 ms; a cache hit costs next to nothing. EmDash purges
+		// Serve rendered pages from Cloudflare's Worker cache. A render measured 17-135 ms
+		// CPU, over the Free plan's 10 ms; a cache hit never reaches the Worker. EmDash purges
 		// the page's tags on publish, so edits still show immediately.
 		cache: { provider: cacheCloudflare() },
 		routeRules: routeRulesFor(cachedPages),
@@ -70,6 +71,10 @@ export function emdashSite({ root, brands, cachedPages, devAllow }) {
 			emdash({
 				database: d1({ binding: "DB", session: "auto" }),
 				storage: r2({ binding: "MEDIA" }),
+				// "Sign in with Google" on the login page, beside passkeys, so editors need
+				// neither a passkey nor an email provider. Active once the Worker has the
+				// EMDASH_OAUTH_GOOGLE_CLIENT_ID and EMDASH_OAUTH_GOOGLE_CLIENT_SECRET secrets.
+				authProviders: [google()],
 			}),
 		],
 		devToolbar: { enabled: false },

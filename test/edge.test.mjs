@@ -24,3 +24,14 @@ test("errors are never cacheable; successes pass through untouched", async () =>
 		assert.equal(await bad.text(), "x");
 	}
 });
+
+test("the not-found page may cache its own 404; a 404 anywhere else may not", () => {
+	const page = uncacheable(new Response("nf", { status: 404 }), req("/404"));
+	assert.equal(page.status, 404);
+	assert.equal(page.headers.get("Cloudflare-CDN-Cache-Control"), "public, max-age=3600");
+	assert.equal(page.headers.get("Cache-Control"), null);
+	const other = uncacheable(new Response("nf", { status: 404 }), req("/.env"));
+	assert.equal(other.headers.get("Cache-Control"), "no-store");
+	const broken = uncacheable(new Response("x", { status: 500 }), req("/404"));
+	assert.equal(broken.headers.get("Cache-Control"), "no-store");
+});

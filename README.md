@@ -27,7 +27,9 @@ a built release of this repo, never edited.
   must not expose it.
 - Responses with status 400 and above are marked `no-store` and lose their cache tags.
   Route caching applies whatever the status, so a transient error would otherwise be
-  served from cache.
+  served from cache. The exception is the not-found page answering 404 at `/404`: themes
+  redirect unknown slugs there and scanners probe thousands of unknown paths, so it is
+  cached like a page.
 - `Maintenance` is a named entrypoint, reachable only through a service binding. A shared
   scheduler Worker with one cron calls `run()` on each site, because the Free plan allows
   only 5 cron triggers per account. Sites set `"triggers": { "crons": [] }`.
@@ -44,8 +46,20 @@ server may read, relative to the site). It uses D1 binding `DB`, R2 binding `MED
 Cloudflare route caching. Images uploaded to EmDash are resized (WebP, a `srcset` of
 widths) by Cloudflare Images through the adapter's `IMAGES` binding. The site's own hosts are
 allowed for resizing, read from `wrangler.jsonc` (`EMDASH_SITE_URL` and the route patterns
-of the environment being built). Workers Free includes 5,000 unique transformations a month. A page render costs ~14 ms CPU against the Free plan's 10 ms;
-a cache hit costs next to nothing.
+of the environment being built). Workers Free includes 5,000 unique transformations a month.
+A page render measured 17-135 ms CPU (October 2026) against the Free plan's 10 ms; a cache
+hit is served before the Worker runs and costs nothing.
+
+**Sign-in**: the login page offers "Sign in with Google" beside passkeys, so editors need
+neither a passkey nor an email provider. It is active once the Worker has two secrets:
+
+    npx wrangler secret put EMDASH_OAUTH_GOOGLE_CLIENT_ID --name <worker>
+    npx wrangler secret put EMDASH_OAUTH_GOOGLE_CLIENT_SECRET --name <worker>
+
+The Google OAuth client (a Web application) lists one authorized redirect URI per site:
+`https://<EMDASH_SITE_URL host>/_emdash/api/auth/oauth/google/callback`. Without an email
+provider, the admin offers "copy invite link"; the invitee opens it and signs in with the
+Google account whose address was invited (EmDash refuses a different or unverified one).
 
 **Media URL for CSS backgrounds**: `import { mediaUrl } from "emdash-kit/media-url"`
 
