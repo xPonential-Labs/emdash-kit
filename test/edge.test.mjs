@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { adminGated, uncacheable } from "../lib/edge.js";
+import { adminGated, canonicalRedirect, uncacheable } from "../lib/edge.js";
 
 const req = (p) => new Request(`https://example.com${p}`);
 
@@ -34,4 +34,36 @@ test("the not-found page may cache its own 404; a 404 anywhere else may not", ()
 	assert.equal(other.headers.get("Cache-Control"), "no-store");
 	const broken = uncacheable(new Response("x", { status: 500 }), req("/404"));
 	assert.equal(broken.headers.get("Cache-Control"), "no-store");
+});
+
+test("canonicalRedirect sends other hosts to the EMDASH_SITE_URL origin, never cached", () => {
+	const env = { EMDASH_SITE_URL: "https://example.com" };
+	const go = (u, method = "GET", e = env) => canonicalRedirect(new Request(u, { method }), e);
+	for (const method of ["GET", "HEAD"]) {
+		const r = go("https://www.example.com/a/b?x=1&y=2", method);
+		assert.equal(r.status, 301);
+		assert.equal(r.headers.get("Location"), "https://example.com/a/b?x=1&y=2");
+		assert.equal(r.headers.get("Cache-Control"), "no-store");
+		assert.equal(r.headers.get("Cloudflare-CDN-Cache-Control"), "no-store");
+	}
+	for (const method of ["POST", "PUT", "DELETE"]) {
+		const r = go("https://www.example.com/_emdash/api/x?q=1", method);
+		assert.equal(r.status, 308);
+		assert.equal(r.headers.get("Location"), "https://example.com/_emdash/api/x?q=1");
+		assert.equal(r.headers.get("Cache-Control"), "no-store");
+		assert.equal(r.headers.get("Cloudflare-CDN-Cache-Control"), "no-store");
+	}
+	const www = go("https://example.org/z?k=v", "GET", { EMDASH_SITE_URL: "https://www.example.org" });
+	assert.equal(www.headers.get("Location"), "https://www.example.org/z?k=v");
+	assert.equal(go("https://www.example.com").headers.get("Location"), "https://example.com/");
+});
+
+test("canonicalRedirect stays out of the way", () => {
+	const env = { EMDASH_SITE_URL: "https://example.com" };
+	const go = (u, e = env) => canonicalRedirect(new Request(u), e);
+	assert.equal(go("https://example.com/a?x=1"), null);
+	for (const u of ["http://localhost:8787/x", "http://127.0.0.1:8787/x", "http://[::1]:8787/x"]) assert.equal(go(u), null);
+	assert.equal(go("https://www.example.com/x", {}), null);
+	assert.equal(go("https://www.example.com/x", { EMDASH_SITE_URL: "not a url" }), null);
+	assert.equal(go("https://www.example.com/x", { EMDASH_SITE_URL: "" }), null);
 });
