@@ -25,6 +25,11 @@ a built release of this repo, never edited.
 - `/_emdash/*` answers 404 (except media files) until `EMDASH_ADMIN_OPEN` is `"true"`.
   EmDash's first-run setup makes the first visitor Administrator, so a staged site
   must not expose it.
+- Requests on any host other than `EMDASH_SITE_URL`'s are redirected there, path and query
+  kept: 301 for GET and HEAD, 308 for other methods, never cached. A page names the host it
+  was rendered for and the page cache keeps whichever host came first, so a site answers on
+  one host only. `localhost`, `127.0.0.1` and `[::1]` never redirect, and nothing redirects
+  when `EMDASH_SITE_URL` is unset or unparsable.
 - Responses with status 400 and above are marked `no-store` and lose their cache tags.
   Route caching applies whatever the status, so a transient error would otherwise be
   served from cache. The exception is the not-found page answering 404 at `/404`: themes
