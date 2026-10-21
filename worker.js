@@ -2,7 +2,7 @@
 //   export { default, Maintenance, PluginBridge } from "emdash-kit/worker";
 import { WorkerEntrypoint } from "cloudflare:workers";
 import handler, { createScheduledHandler, PluginBridge } from "@emdash-cms/cloudflare/worker";
-import { adminGated, uncacheable } from "./lib/edge.js";
+import { adminGated, canonicalRedirect, uncacheable } from "./lib/edge.js";
 
 export { PluginBridge };
 
@@ -25,6 +25,8 @@ export class Maintenance extends WorkerEntrypoint {
 export default {
 	...handler,
 	async fetch(request, env, ctx) {
+		const redirect = canonicalRedirect(request, env);
+		if (redirect) return redirect;
 		if (adminGated(request, env)) return uncacheable(new Response("Not found", { status: 404 }));
 		return uncacheable(await handler.fetch(request, env, ctx), request);
 	},
