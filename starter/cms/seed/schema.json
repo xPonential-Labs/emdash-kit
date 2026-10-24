@@ -1,0 +1,24 @@
+{
+	"$schema": "https://emdashcms.com/seed.schema.json",
+	"version": "1",
+	"meta": {
+		"name": "{{DOMAIN}}",
+		"description": "Placeholder site",
+		"author": "xPonential Labs"
+	},
+	"collections": [
+		{
+			"slug": "pages",
+			"label": "Pages",
+			"labelSingular": "Page",
+			"urlPattern": "/{slug}",
+			"supports": ["drafts", "revisions", "preview"],
+			"fields": [
+				{ "slug": "title", "label": "Title", "type": "string", "required": true },
+				{ "slug": "text", "label": "Text", "type": "text" }
+			]
+		}
+	],
+	"widgetAreas": [],
+	"menus": []
+}

@@ -1,0 +1,21 @@
+{
+	"settings": {
+		"title": "{{DOMAIN}}",
+		"tagline": "Coming soon"
+	},
+	"menus": [],
+	"widgetAreas": [],
+	"content": {
+		"pages": [
+			{
+				"id": "home",
+				"slug": "home",
+				"status": "published",
+				"data": {
+					"title": "{{DOMAIN}}",
+					"text": "Coming soon"
+				}
+			}
+		]
+	}
+}

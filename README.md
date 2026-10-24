@@ -81,6 +81,22 @@ Administrator is claimed later on the real domain (passkeys bind to the origin).
 
 Exit codes: 0 done, 3 refused (wrong folder, unknown brand, non-empty database), 1 fault.
 
+## New site
+
+    emdash-kit new <domain> --d1-id <uuid> --dir <path>
+
+Writes a placeholder EmDash site into `<path>/cms/` for a newly bought domain: `wrangler.jsonc`
+with one environment named after the domain's label (routes for the apex and `www` on the
+zone, `EMDASH_SITE_URL`, the D1 and R2 bindings, no cron, no workers.dev), a `package.json`
+that depends on `file:vendor/emdash-kit-<version>.tgz`, and a plain page that says "Coming
+soon" with a system-font stylesheet and `/404`. It does not write `vendor/`; copy the packed
+tarball there before `npm install`.
+
+`emdash-kit new` never calls Cloudflare: create the D1 database first and pass its id. The
+admin stays gated, because `EMDASH_ADMIN_OPEN` is not set; the Administrator is claimed
+after the first deploy. The domain must be exactly `<label>.<tld>`, `--d1-id` a UUID and
+`--dir` absent or empty; anything else exits 3 and writes nothing.
+
 ## Test
 
     npm install && npm test

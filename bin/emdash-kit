@@ -3,11 +3,13 @@
 #
 #   emdash-kit content <brand> --local|--remote   load seed content into D1 and R2 (empty DB only)
 #   emdash-kit seed <brand>                       write .emdash/seed.json from seed/schema.json + seed/<brand>.json
+#   emdash-kit new <domain> --d1-id <uuid> --dir <path>   write a placeholder site (cms/) for a new domain; never calls Cloudflare
 set -euo pipefail
 kit="$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)"
 cmd="${1:-}"; shift || true
 case "$cmd" in
 	content) exec "$kit/lib/content.sh" "$@" ;;
+	new) exec node "$kit/lib/new.mjs" "$@" ;;
 	seed) BRAND="${1:-}" exec node "$kit/lib/brand.mjs" ;;
 	*) sed -n '2,6p' "$0" >&2; exit 3 ;;
 esac
