@@ -21,6 +21,7 @@
 	"files": [
 		"bin",
 		"lib",
+		"starter",
 		"worker.js",
 		"worker.d.ts",
 		"config.mjs",

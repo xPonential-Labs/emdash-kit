@@ -1,0 +1,55 @@
+---
+import "@theme/style.css";
+import { getSiteSettingsWithCacheHint } from "emdash";
+import { EmDashHead, EmDashBodyStart, EmDashBodyEnd } from "emdash/ui";
+import { createPublicPageContext } from "emdash/page";
+import { env } from "cloudflare:workers";
+
+interface Props {
+	/** The browser-tab title; the page's own Title field */
+	title?: string | null;
+	content?: { collection: string; id: string; slug?: string | null };
+}
+
+const { title, content } = Astro.props;
+const settingsResult = await getSiteSettingsWithCacheHint();
+if (Astro.cache?.enabled) Astro.cache.set(settingsResult.cacheHint);
+
+const settings = settingsResult.data ?? {};
+const siteTitle = settings.title ?? "";
+const fullTitle = title ?? siteTitle;
+const description = settings.tagline ?? "";
+
+// Canonical URL: always the configured site URL (the apex domain), even for visitors on www.
+const siteUrl = (env as { EMDASH_SITE_URL?: string }).EMDASH_SITE_URL ?? Astro.url.origin;
+const canonical = new URL(Astro.url.pathname, siteUrl).href;
+
+const pageCtx = createPublicPageContext({
+	Astro,
+	kind: content ? "content" : "custom",
+	pageType: "website",
+	title: fullTitle,
+	pageTitle: fullTitle,
+	description,
+	canonical,
+	content,
+	siteName: siteTitle,
+});
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>{fullTitle}</title>
+		<EmDashHead page={pageCtx} />
+	</head>
+	<body>
+		<EmDashBodyStart page={pageCtx} />
+		<main>
+			<slot />
+		</main>
+		<EmDashBodyEnd page={pageCtx} />
+	</body>
+</html>

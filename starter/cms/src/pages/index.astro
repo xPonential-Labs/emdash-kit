@@ -1,0 +1,15 @@
+---
+import { getEmDashEntry } from "emdash";
+import Base from "../layouts/Base.astro";
+
+// The home page is the "home" entry in Pages, so editors change it like any other page.
+const { entry: page, cacheHint } = await getEmDashEntry("pages", "home");
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+---
+
+<Base title={page?.data.title} content={page ? { collection: "pages", id: page.data.id, slug: page.id } : undefined}>
+	<section class="placeholder">
+		<h1>{page?.data.title ?? "{{DOMAIN}}"}</h1>
+		<p>{page?.data.text ?? "Coming soon"}</p>
+	</section>
+</Base>

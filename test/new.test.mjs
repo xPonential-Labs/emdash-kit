@@ -1,8 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, mkdirSync, readdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
-import { tmpdir } from "node:os";
+import { mkdtempSync, mkdirSync, readdirSync, readFileSync, writeFileSync, existsSync, symlinkSync, realpathSync } from "node:fs";
+import { homedir, tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse } from "jsonc-parser";
@@ -34,6 +34,7 @@ test("new: writes wrangler.jsonc and package.json for example.com", () => {
 	const pkg = JSON.parse(readFileSync(join(d, "cms/package.json"), "utf8"));
 	assert.equal(pkg.dependencies["emdash-kit"], `file:vendor/emdash-kit-${version}.tgz`);
 	assert.equal(existsSync(join(d, "cms/vendor")), false);
+	assert.ok(existsSync(join(d, "cms/.gitignore")) && existsSync(join(d, "cms/seed/example.json")));
 });
 
 test("new: creates --dir when it does not exist yet", () => {
@@ -63,3 +64,35 @@ for (const [name, args, seed] of [
 		assert.deepEqual(snap(d), before);
 	});
 }
+
+test("new: the generated site seeds and builds against the kit's installed dependencies", { timeout: 900_000 }, () => {
+	const d = tmp();
+	assert.equal(run(["example.com", "--d1-id", D1, "--dir", d]).status, 0);
+	const cms = join(d, "cms");
+	// Link the kit's installed tree (no npm install) and the kit itself as emdash-kit.
+	const nm = join(cms, "node_modules");
+	mkdirSync(nm);
+	for (const e of readdirSync(join(kit, "node_modules"))) {
+		if (e !== ".astro" && e !== "emdash-kit") symlinkSync(realpathSync(join(kit, "node_modules", e)), join(nm, e));
+	}
+	symlinkSync(kit, join(nm, "emdash-kit"));
+	// EmDash fetches its admin font at build time; a cache outside the repo survives between runs.
+	const cache = process.env.EMDASH_KIT_TEST_FONT_CACHE ?? join(homedir(), "workspace/temp/kit-starter-font-cache");
+	mkdirSync(cache, { recursive: true });
+	symlinkSync(cache, join(nm, ".astro"));
+
+	const seed = spawnSync(bin, ["seed", "example"], { cwd: cms, encoding: "utf8" });
+	assert.equal(seed.status, 0, seed.stderr);
+	const home = JSON.parse(readFileSync(join(cms, ".emdash/seed.json"), "utf8")).content.pages.find((p) => p.slug === "home");
+	const blob = JSON.stringify(home);
+	assert.ok(blob.includes("example.com") && blob.includes("Coming soon"), blob);
+
+	const env = { ...process.env, BRAND: "example", CLOUDFLARE_ENV: "example", ASTRO_TELEMETRY_DISABLED: "1" };
+	const build = () => spawnSync(join(nm, ".bin/astro"), ["build"], { cwd: cms, env, encoding: "utf8" });
+	let b = build();
+	if (b.status !== 0 && (b.stdout + b.stderr).includes("CannotFetchFontFile")) b = build();
+	assert.equal(b.status, 0, (b.stdout + b.stderr).slice(-1500));
+	const w = JSON.parse(readFileSync(join(cms, "dist/server/wrangler.json"), "utf8"));
+	assert.deepEqual(w.routes.map((r) => r.pattern).sort(), ["example.com/*", "www.example.com/*"]);
+	assert.equal(w.vars.EMDASH_SITE_URL, "https://example.com");
+});
