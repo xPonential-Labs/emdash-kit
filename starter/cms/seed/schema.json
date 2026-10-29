@@ -29,18 +29,6 @@
 					"label": "Page sections",
 					"type": "blocks",
 					"validation": {
-						"allowedTypes": [
-							"hero",
-							"text",
-							"image_text",
-							"cards",
-							"steps",
-							"gallery",
-							"quote",
-							"faq",
-							"cta_band",
-							"links"
-						],
 						"maxItems": 30
 					}
 				}

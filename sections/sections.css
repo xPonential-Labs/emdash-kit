@@ -34,8 +34,7 @@ body {
 	text-decoration: none;
 	font-weight: 600;
 }
-.kit-section a { color: var(--look-accent, LinkText); }
-.kit-section a.kit-button { color: var(--look-bg, Canvas); }
+.kit-section a:not(.kit-button) { color: var(--look-accent, LinkText); }
 .kit-grid, .kit-steps-list, .kit-link-list { list-style: none; margin: 0; padding: 0; }
 .kit-grid { display: grid; gap: var(--look-space, 1rem); grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
 .kit-card { background: var(--look-surface, Canvas); padding: calc(var(--look-space, 1rem) * 1.5); border-radius: var(--look-radius, 0); }
