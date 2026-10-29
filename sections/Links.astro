@@ -1,0 +1,17 @@
+---
+const { value } = Astro.props;
+---
+
+<section class="kit-section kit-links">
+	<div class="kit-wrap kit-narrow">
+		{value.heading && <h2>{value.heading}</h2>}
+		<ul class="kit-link-list">
+			{(value.links ?? []).map((l: { label: string; url: string; description?: string }) => (
+				<li>
+					<a href={l.url}>{l.label}</a>
+					{l.description && <span>{l.description}</span>}
+				</li>
+			))}
+		</ul>
+	</div>
+</section>

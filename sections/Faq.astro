@@ -1,0 +1,15 @@
+---
+const { value } = Astro.props;
+---
+
+<section class="kit-section kit-faq">
+	<div class="kit-wrap kit-narrow">
+		{value.heading && <h2>{value.heading}</h2>}
+		{(value.items ?? []).map((q: { question: string; answer: string }) => (
+			<details>
+				<summary>{q.question}</summary>
+				<p>{q.answer}</p>
+			</details>
+		))}
+	</div>
+</section>

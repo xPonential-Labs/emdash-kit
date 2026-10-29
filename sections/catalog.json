@@ -1,0 +1,374 @@
+[
+	{
+		"slug": "hero",
+		"label": "Hero",
+		"currentVersion": 1,
+		"versions": [
+			{
+				"version": 1,
+				"fields": [
+					{
+						"slug": "eyebrow",
+						"label": "Small line above the heading",
+						"type": "string"
+					},
+					{
+						"slug": "heading",
+						"label": "Heading",
+						"type": "string",
+						"required": true
+					},
+					{
+						"slug": "lead",
+						"label": "Lead paragraph",
+						"type": "text"
+					},
+					{
+						"slug": "image",
+						"label": "Image",
+						"type": "image"
+					},
+					{
+						"slug": "cta_label",
+						"label": "Button label",
+						"type": "string"
+					},
+					{
+						"slug": "cta_url",
+						"label": "Button link",
+						"type": "url"
+					}
+				]
+			}
+		]
+	},
+	{
+		"slug": "text",
+		"label": "Text",
+		"currentVersion": 1,
+		"versions": [
+			{
+				"version": 1,
+				"fields": [
+					{
+						"slug": "heading",
+						"label": "Heading",
+						"type": "string"
+					},
+					{
+						"slug": "body",
+						"label": "Text (a blank line starts a new paragraph)",
+						"type": "text",
+						"required": true
+					}
+				]
+			}
+		]
+	},
+	{
+		"slug": "image-text",
+		"label": "Image and text",
+		"currentVersion": 1,
+		"versions": [
+			{
+				"version": 1,
+				"fields": [
+					{
+						"slug": "heading",
+						"label": "Heading",
+						"type": "string",
+						"required": true
+					},
+					{
+						"slug": "body",
+						"label": "Text",
+						"type": "text"
+					},
+					{
+						"slug": "image",
+						"label": "Image",
+						"type": "image"
+					},
+					{
+						"slug": "side",
+						"label": "Image side",
+						"type": "select",
+						"options": [
+							"left",
+							"right"
+						],
+						"validation": {
+							"options": [
+								"left",
+								"right"
+							]
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"slug": "cards",
+		"label": "Cards",
+		"currentVersion": 1,
+		"versions": [
+			{
+				"version": 1,
+				"fields": [
+					{
+						"slug": "heading",
+						"label": "Heading",
+						"type": "string"
+					},
+					{
+						"slug": "cards",
+						"label": "Cards",
+						"type": "repeater",
+						"required": true,
+						"validation": {
+							"subFields": [
+								{
+									"slug": "title",
+									"label": "Title",
+									"type": "string",
+									"required": true
+								},
+								{
+									"slug": "text",
+									"label": "Text",
+									"type": "text"
+								},
+								{
+									"slug": "url",
+									"label": "Link",
+									"type": "url"
+								}
+							]
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"slug": "steps",
+		"label": "Steps",
+		"currentVersion": 1,
+		"versions": [
+			{
+				"version": 1,
+				"fields": [
+					{
+						"slug": "heading",
+						"label": "Heading",
+						"type": "string"
+					},
+					{
+						"slug": "steps",
+						"label": "Steps",
+						"type": "repeater",
+						"required": true,
+						"validation": {
+							"subFields": [
+								{
+									"slug": "title",
+									"label": "Title",
+									"type": "string",
+									"required": true
+								},
+								{
+									"slug": "text",
+									"label": "Text",
+									"type": "text"
+								}
+							]
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"slug": "gallery",
+		"label": "Gallery",
+		"currentVersion": 1,
+		"versions": [
+			{
+				"version": 1,
+				"fields": [
+					{
+						"slug": "heading",
+						"label": "Heading",
+						"type": "string"
+					},
+					{
+						"slug": "images",
+						"label": "Images",
+						"type": "repeater",
+						"required": true,
+						"validation": {
+							"subFields": [
+								{
+									"slug": "image",
+									"label": "Image",
+									"type": "image",
+									"required": true
+								},
+								{
+									"slug": "caption",
+									"label": "Caption",
+									"type": "string"
+								}
+							]
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"slug": "quote",
+		"label": "Quote",
+		"currentVersion": 1,
+		"versions": [
+			{
+				"version": 1,
+				"fields": [
+					{
+						"slug": "quote",
+						"label": "Quote",
+						"type": "text",
+						"required": true
+					},
+					{
+						"slug": "author",
+						"label": "Author",
+						"type": "string"
+					},
+					{
+						"slug": "role",
+						"label": "Role",
+						"type": "string"
+					}
+				]
+			}
+		]
+	},
+	{
+		"slug": "faq",
+		"label": "Questions and answers",
+		"currentVersion": 1,
+		"versions": [
+			{
+				"version": 1,
+				"fields": [
+					{
+						"slug": "heading",
+						"label": "Heading",
+						"type": "string"
+					},
+					{
+						"slug": "items",
+						"label": "Questions",
+						"type": "repeater",
+						"required": true,
+						"validation": {
+							"subFields": [
+								{
+									"slug": "question",
+									"label": "Question",
+									"type": "string",
+									"required": true
+								},
+								{
+									"slug": "answer",
+									"label": "Answer",
+									"type": "text",
+									"required": true
+								}
+							]
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"slug": "cta-band",
+		"label": "Call to action",
+		"currentVersion": 1,
+		"versions": [
+			{
+				"version": 1,
+				"fields": [
+					{
+						"slug": "heading",
+						"label": "Heading",
+						"type": "string",
+						"required": true
+					},
+					{
+						"slug": "text",
+						"label": "Text",
+						"type": "text"
+					},
+					{
+						"slug": "button_label",
+						"label": "Button label",
+						"type": "string"
+					},
+					{
+						"slug": "button_url",
+						"label": "Button link",
+						"type": "url"
+					}
+				]
+			}
+		]
+	},
+	{
+		"slug": "links",
+		"label": "Links",
+		"currentVersion": 1,
+		"versions": [
+			{
+				"version": 1,
+				"fields": [
+					{
+						"slug": "heading",
+						"label": "Heading",
+						"type": "string"
+					},
+					{
+						"slug": "links",
+						"label": "Links",
+						"type": "repeater",
+						"required": true,
+						"validation": {
+							"subFields": [
+								{
+									"slug": "label",
+									"label": "Label",
+									"type": "string",
+									"required": true
+								},
+								{
+									"slug": "url",
+									"label": "Link",
+									"type": "url",
+									"required": true
+								},
+								{
+									"slug": "description",
+									"label": "Description",
+									"type": "string"
+								}
+							]
+						}
+					}
+				]
+			}
+		]
+	}
+]

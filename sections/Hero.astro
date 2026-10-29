@@ -1,0 +1,15 @@
+---
+import { mediaUrl } from "../media-url.js";
+const { value } = Astro.props;
+const img = mediaUrl(value.image);
+---
+
+<section class="kit-section kit-hero">
+	<div class="kit-wrap">
+		{value.eyebrow && <p class="kit-eyebrow">{value.eyebrow}</p>}
+		<h1>{value.heading}</h1>
+		{value.lead && <p class="kit-lead">{value.lead}</p>}
+		{value.cta_label && value.cta_url && <p><a class="kit-button" href={value.cta_url}>{value.cta_label}</a></p>}
+		{img && <img class="kit-hero-image" src={img} alt={value.image.alt ?? ""} loading="eager" />}
+	</div>
+</section>
