@@ -66,7 +66,7 @@
 		]
 	},
 	{
-		"slug": "image-text",
+		"slug": "image_text",
 		"label": "Image and text",
 		"currentVersion": 1,
 		"versions": [
@@ -93,10 +93,6 @@
 						"slug": "side",
 						"label": "Image side",
 						"type": "select",
-						"options": [
-							"left",
-							"right"
-						],
 						"validation": {
 							"options": [
 								"left",
@@ -295,7 +291,7 @@
 		]
 	},
 	{
-		"slug": "cta-band",
+		"slug": "cta_band",
 		"label": "Call to action",
 		"currentVersion": 1,
 		"versions": [
