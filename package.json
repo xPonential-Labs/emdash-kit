@@ -1,6 +1,6 @@
 {
 	"name": "emdash-kit",
-	"version": "1.3.0",
+	"version": "1.4.0",
 	"description": "Shared Worker entry, Astro config and content tools for EmDash sites on Cloudflare Workers (Free plan)",
 	"type": "module",
 	"license": "MIT",
