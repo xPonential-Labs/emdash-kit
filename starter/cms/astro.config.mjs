@@ -4,5 +4,5 @@ import { emdashSite } from "emdash-kit/config";
 export default emdashSite({
 	root: import.meta.url,
 	brands: ["{{BRAND}}"],
-	cachedPages: ["/"],
+	cachedPages: ["/", "/[slug]"],
 });

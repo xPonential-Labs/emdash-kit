@@ -1,6 +1,13 @@
 ---
 import "@theme/style.css";
-import { getSiteSettingsWithCacheHint } from "emdash";
+import "emdash-kit/sections/sections.css";
+import "emdash-kit/looks/warm.css";
+import "emdash-kit/looks/bold.css";
+import "emdash-kit/looks/quiet.css";
+import "emdash-kit/looks/playful.css";
+import "emdash-kit/looks/editorial.css";
+import "emdash-kit/looks/dark.css";
+import { getEmDashCollection, getSiteSettingsWithCacheHint } from "emdash";
 import { EmDashHead, EmDashBodyStart, EmDashBodyEnd } from "emdash/ui";
 import { createPublicPageContext } from "emdash/page";
 import { env } from "cloudflare:workers";
@@ -14,6 +21,13 @@ interface Props {
 const { title, content } = Astro.props;
 const settingsResult = await getSiteSettingsWithCacheHint();
 if (Astro.cache?.enabled) Astro.cache.set(settingsResult.cacheHint);
+
+// The site's look is the published entry of the `look` collection (the most recently
+// published wins). With none published no data-look is set and the base styles show.
+const lookResult = await getEmDashCollection("look", { status: "published", orderBy: { published_at: "desc" }, limit: 1 });
+if (Astro.cache?.enabled) Astro.cache.set(lookResult.cacheHint);
+const lookStyle = lookResult.entries[0]?.data.style;
+const look = typeof lookStyle === "string" && /^[a-z]+$/.test(lookStyle) ? lookStyle : undefined;
 
 const settings = settingsResult.data ?? {};
 const siteTitle = settings.title ?? "";
@@ -38,7 +52,7 @@ const pageCtx = createPublicPageContext({
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-look={look}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
