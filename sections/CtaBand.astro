@@ -1,0 +1,11 @@
+---
+const { value } = Astro.props;
+---
+
+<section class="kit-section kit-cta-band">
+	<div class="kit-wrap kit-narrow">
+		<h2>{value.heading}</h2>
+		{value.text && <p>{value.text}</p>}
+		{value.button_label && value.button_url && <p><a class="kit-button" href={value.button_url}>{value.button_label}</a></p>}
+	</div>
+</section>

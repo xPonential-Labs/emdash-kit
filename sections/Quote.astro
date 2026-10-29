@@ -1,0 +1,17 @@
+---
+const { value } = Astro.props;
+---
+
+<section class="kit-section kit-quote">
+	<div class="kit-wrap kit-narrow">
+		<blockquote>
+			<p>{value.quote}</p>
+			{(value.author || value.role) && (
+				<footer>
+					{value.author && <cite>{value.author}</cite>}
+					{value.role && <span>{value.role}</span>}
+				</footer>
+			)}
+		</blockquote>
+	</div>
+</section>

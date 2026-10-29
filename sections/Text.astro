@@ -1,0 +1,11 @@
+---
+const { value } = Astro.props;
+const paragraphs = String(value.body ?? "").split(/\n{2,}/).filter(Boolean);
+---
+
+<section class="kit-section kit-text">
+	<div class="kit-wrap kit-narrow">
+		{value.heading && <h2>{value.heading}</h2>}
+		{paragraphs.map((p) => <p>{p}</p>)}
+	</div>
+</section>

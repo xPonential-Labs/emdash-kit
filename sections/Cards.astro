@@ -1,0 +1,17 @@
+---
+const { value } = Astro.props;
+---
+
+<section class="kit-section kit-cards">
+	<div class="kit-wrap">
+		{value.heading && <h2>{value.heading}</h2>}
+		<ul class="kit-grid">
+			{(value.cards ?? []).map((c: { title: string; text?: string; url?: string }) => (
+				<li class="kit-card">
+					<h3>{c.url ? <a href={c.url}>{c.title}</a> : c.title}</h3>
+					{c.text && <p>{c.text}</p>}
+				</li>
+			))}
+		</ul>
+	</div>
+</section>

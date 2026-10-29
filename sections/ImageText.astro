@@ -1,0 +1,15 @@
+---
+import { mediaUrl } from "../media-url.js";
+const { value } = Astro.props;
+const img = mediaUrl(value.image);
+---
+
+<section class="kit-section kit-image-text" data-side={value.side ?? "left"}>
+	<div class="kit-wrap kit-split">
+		{img && <img src={img} alt={value.image.alt ?? ""} loading="lazy" />}
+		<div>
+			<h2>{value.heading}</h2>
+			{value.body && <p>{value.body}</p>}
+		</div>
+	</div>
+</section>

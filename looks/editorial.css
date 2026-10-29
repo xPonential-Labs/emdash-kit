@@ -1,0 +1,11 @@
+[data-look="editorial"] {
+	--look-bg: #fffdf8;
+	--look-surface: #f3efe4;
+	--look-text: #1c1c1c;
+	--look-muted: #5e5a50;
+	--look-accent: #8a1c1c;
+	--look-font-heading: Georgia, "Times New Roman", serif;
+	--look-font-body: Georgia, "Times New Roman", serif;
+	--look-radius: 2px;
+	--look-space: 2rem;
+}

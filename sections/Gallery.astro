@@ -1,0 +1,21 @@
+---
+import { mediaUrl } from "../media-url.js";
+const { value } = Astro.props;
+const images = (value.pictures ?? []).map((i: { image?: { alt?: string }; caption?: string }) => ({ src: mediaUrl(i.image), alt: i.image?.alt ?? "", caption: i.caption }));
+---
+
+<section class="kit-section kit-gallery">
+	<div class="kit-wrap">
+		{value.heading && <h2>{value.heading}</h2>}
+		<ul class="kit-grid">
+			{images.map((i: { src?: string; alt: string; caption?: string }) => (
+				<li>
+					<figure>
+						{i.src && <img src={i.src} alt={i.alt} loading="lazy" />}
+						{i.caption && <figcaption>{i.caption}</figcaption>}
+					</figure>
+				</li>
+			))}
+		</ul>
+	</div>
+</section>

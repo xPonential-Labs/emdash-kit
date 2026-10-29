@@ -1,0 +1,17 @@
+---
+import { getEmDashEntry } from "emdash";
+import Base from "../layouts/Base.astro";
+import Sections from "emdash-kit/sections/Sections.astro";
+
+const { slug } = Astro.params;
+if (!slug) return Astro.redirect("/404");
+if (slug === "home") return Astro.redirect("/", 301);
+
+const { entry: page, cacheHint } = await getEmDashEntry("pages", slug);
+if (!page) return Astro.redirect("/404");
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+---
+
+<Base title={page.data.title} content={{ collection: "pages", id: page.data.id, slug: page.id }}>
+	<Sections value={page.data.layout} />
+</Base>

@@ -13,7 +13,30 @@
 				"status": "published",
 				"data": {
 					"title": "{{DOMAIN}}",
-					"text": "Coming soon"
+					"layout": [
+						{
+							"_type": "hero",
+							"_version": 1,
+							"_key": "home-hero",
+							"heading": "{{DOMAIN}}"
+						},
+						{
+							"_type": "text",
+							"_version": 1,
+							"_key": "home-text",
+							"body": "Coming soon"
+						}
+					]
+				}
+			}
+		],
+		"look": [
+			{
+				"id": "look",
+				"slug": "look",
+				"status": "published",
+				"data": {
+					"style": "quiet"
 				}
 			}
 		]

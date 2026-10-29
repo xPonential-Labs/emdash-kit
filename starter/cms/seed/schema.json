@@ -12,10 +12,61 @@
 			"label": "Pages",
 			"labelSingular": "Page",
 			"urlPattern": "/{slug}",
-			"supports": ["drafts", "revisions", "preview"],
+			"supports": [
+				"drafts",
+				"revisions",
+				"preview"
+			],
 			"fields": [
-				{ "slug": "title", "label": "Title", "type": "string", "required": true },
-				{ "slug": "text", "label": "Text", "type": "text" }
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "layout",
+					"label": "Page sections",
+					"type": "blocks",
+					"validation": {
+						"maxItems": 30
+					}
+				}
+			]
+		},
+		{
+			"slug": "look",
+			"label": "Look",
+			"labelSingular": "Look",
+			"supports": [
+				"drafts",
+				"revisions"
+			],
+			"fields": [
+				{
+					"slug": "style",
+					"label": "Look of the site",
+					"type": "select",
+					"required": true,
+					"options": [
+						"warm",
+						"bold",
+						"quiet",
+						"playful",
+						"editorial",
+						"dark"
+					],
+					"validation": {
+						"options": [
+							"warm",
+							"bold",
+							"quiet",
+							"playful",
+							"editorial",
+							"dark"
+						]
+					}
+				}
 			]
 		}
 	],

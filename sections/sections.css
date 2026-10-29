@@ -1,0 +1,58 @@
+/* Layout and look hooks for the kit's sections. Colours, type and spacing come from the
+   --look-* variables a look sets on <html data-look="...">; the fallbacks apply when no look is set. */
+body {
+	margin: 0;
+	background: var(--look-bg, Canvas);
+	color: var(--look-text, CanvasText);
+	font-family: var(--look-font-body, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
+	line-height: 1.6;
+}
+.kit-section {
+	padding: calc(var(--look-space, 1rem) * 3) var(--look-space, 1rem);
+}
+.kit-section h1,
+.kit-section h2,
+.kit-section h3 {
+	font-family: var(--look-font-heading, inherit);
+	line-height: 1.2;
+	margin: 0 0 0.5em;
+}
+.kit-section h1 { font-size: clamp(2.2rem, 6vw, 3.8rem); }
+.kit-section h2 { font-size: clamp(1.6rem, 4vw, 2.4rem); }
+.kit-section p { margin: 0 0 1em; }
+.kit-section img { max-width: 100%; height: auto; border-radius: var(--look-radius, 0); }
+.kit-wrap { max-width: 68rem; margin: 0 auto; }
+.kit-narrow { max-width: 42rem; }
+.kit-eyebrow { color: var(--look-muted, GrayText); text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.85rem; }
+.kit-lead { font-size: 1.25rem; color: var(--look-muted, GrayText); }
+.kit-button {
+	display: inline-block;
+	padding: 0.7em 1.4em;
+	background: var(--look-accent, LinkText);
+	color: var(--look-bg, Canvas);
+	border-radius: var(--look-radius, 0);
+	text-decoration: none;
+	font-weight: 600;
+}
+.kit-section a:not(.kit-button) { color: var(--look-accent, LinkText); }
+.kit-grid, .kit-steps-list, .kit-link-list { list-style: none; margin: 0; padding: 0; }
+.kit-grid { display: grid; gap: var(--look-space, 1rem); grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+.kit-card { background: var(--look-surface, Canvas); padding: calc(var(--look-space, 1rem) * 1.5); border-radius: var(--look-radius, 0); }
+.kit-steps-list { counter-reset: kit-step; }
+.kit-steps-list li { counter-increment: kit-step; margin-bottom: var(--look-space, 1rem); padding-left: 3rem; position: relative; }
+.kit-steps-list li::before { content: counter(kit-step); position: absolute; left: 0; top: 0; width: 2.1rem; height: 2.1rem; display: grid; place-items: center; background: var(--look-accent, LinkText); color: var(--look-bg, Canvas); border-radius: 50%; font-weight: 700; }
+.kit-split { display: grid; gap: calc(var(--look-space, 1rem) * 2); align-items: center; grid-template-columns: 1fr; }
+@media (min-width: 48rem) {
+	.kit-split { grid-template-columns: 1fr 1fr; }
+	.kit-image-text[data-side="right"] .kit-split img { order: 2; }
+}
+.kit-gallery figure { margin: 0; }
+.kit-gallery figcaption { color: var(--look-muted, GrayText); font-size: 0.9rem; }
+.kit-quote blockquote { margin: 0; font-size: 1.5rem; font-family: var(--look-font-heading, inherit); }
+.kit-quote footer { font-size: 1rem; color: var(--look-muted, GrayText); }
+.kit-quote cite { font-style: normal; font-weight: 700; margin-right: 0.5em; }
+.kit-faq details { background: var(--look-surface, Canvas); padding: var(--look-space, 1rem); border-radius: var(--look-radius, 0); margin-bottom: 0.5rem; }
+.kit-faq summary { cursor: pointer; font-weight: 600; }
+.kit-cta-band { background: var(--look-surface, Canvas); text-align: center; }
+.kit-link-list li { padding: 0.5em 0; border-bottom: 1px solid var(--look-muted, GrayText); }
+.kit-link-list span { display: block; color: var(--look-muted, GrayText); }

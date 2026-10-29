@@ -1,0 +1,30 @@
+---
+// Renders a page's `layout` blocks field with the kit's ten sections.
+import { Blocks, defineBlockComponents } from "emdash/ui";
+import Hero from "./Hero.astro";
+import Text from "./Text.astro";
+import ImageText from "./ImageText.astro";
+import Cards from "./Cards.astro";
+import Steps from "./Steps.astro";
+import Gallery from "./Gallery.astro";
+import Quote from "./Quote.astro";
+import Faq from "./Faq.astro";
+import CtaBand from "./CtaBand.astro";
+import Links from "./Links.astro";
+
+const { value } = Astro.props;
+const components = defineBlockComponents({
+	hero: Hero,
+	text: Text,
+	image_text: ImageText,
+	cards: Cards,
+	steps: Steps,
+	gallery: Gallery,
+	quote: Quote,
+	faq: Faq,
+	cta_band: CtaBand,
+	links: Links,
+});
+---
+
+<Blocks value={value ?? []} components={components} />

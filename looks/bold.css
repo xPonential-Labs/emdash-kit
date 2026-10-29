@@ -1,0 +1,11 @@
+[data-look="bold"] {
+	--look-bg: #ffffff;
+	--look-surface: #f1f1f1;
+	--look-text: #111111;
+	--look-muted: #4a4a4a;
+	--look-accent: #d6001c;
+	--look-font-heading: "Arial Black", Impact, system-ui, sans-serif;
+	--look-font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+	--look-radius: 0px;
+	--look-space: 1rem;
+}
