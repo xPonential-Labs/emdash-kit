@@ -1,0 +1,11 @@
+[data-look="playful"] {
+	--look-bg: #f4f0ff;
+	--look-surface: #e4dbff;
+	--look-text: #241a4d;
+	--look-muted: #5b4b8a;
+	--look-accent: #c2185b;
+	--look-font-heading: "Trebuchet MS", "Avenir Next", system-ui, sans-serif;
+	--look-font-body: "Trebuchet MS", "Avenir Next", system-ui, sans-serif;
+	--look-radius: 24px;
+	--look-space: 1.25rem;
+}

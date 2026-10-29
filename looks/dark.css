@@ -1,0 +1,11 @@
+[data-look="dark"] {
+	--look-bg: #14171c;
+	--look-surface: #1e232b;
+	--look-text: #e8eaed;
+	--look-muted: #a4abb5;
+	--look-accent: #6cb6ff;
+	--look-font-heading: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+	--look-font-body: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+	--look-radius: 8px;
+	--look-space: 1.5rem;
+}

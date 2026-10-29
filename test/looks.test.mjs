@@ -46,3 +46,58 @@ test("package: sections and looks are exported and published", () => {
 	assert.equal(pkg.exports["./looks/*"], "./looks/*");
 	assert.ok(pkg.files.includes("sections") && pkg.files.includes("looks"));
 });
+
+// ---------------------------------------------------------------- looks
+const LOOKS = ["warm", "bold", "quiet", "playful", "editorial", "dark"];
+const VARS = ["--look-bg", "--look-surface", "--look-text", "--look-muted", "--look-accent", "--look-font-heading", "--look-font-body", "--look-radius", "--look-space"];
+const COLOURS = VARS.slice(0, 5);
+
+function parseLook(name) {
+	const css = readFileSync(join(kit, "looks", `${name}.css`), "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+	const rules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)];
+	const vars = {};
+	for (const [, , body] of rules) for (const m of body.matchAll(/(--[a-z-]+)\s*:\s*([^;]+);?/g)) vars[m[1]] = m[2].trim();
+	return { css, rules, vars };
+}
+const looks = Object.fromEntries(LOOKS.map((n) => [n, parseLook(n)]));
+
+const channel = (c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+function luminance(hex) {
+	const [r, g, b] = [1, 3, 5].map((i) => channel(parseInt(hex.slice(i, i + 2), 16) / 255));
+	return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+function contrast(a, b) {
+	const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+	return (hi + 0.05) / (lo + 0.05);
+}
+
+test("looks: the folder holds exactly the six looks", () => {
+	assert.deepEqual(readdirSync(join(kit, "looks")).sort(), LOOKS.map((n) => `${n}.css`).sort());
+});
+
+for (const n of LOOKS) {
+	test(`looks: ${n} is scoped, defines the nine variables, uses hex colours and no remote font`, () => {
+		const { css, rules, vars } = looks[n];
+		assert.ok(rules.length > 0);
+		for (const [, sel] of rules) assert.equal(sel.trim(), `[data-look="${n}"]`);
+		assert.deepEqual(Object.keys(vars).sort(), [...VARS].sort());
+		for (const v of COLOURS) assert.match(vars[v], /^#[0-9a-f]{6}$/i, v);
+		assert.ok(!css.includes("url(") && !css.includes("@import"));
+	});
+	test(`looks: ${n} meets the contrast bars`, () => {
+		const v = looks[n].vars;
+		assert.ok(contrast(v["--look-text"], v["--look-bg"]) >= 4.5, "text on bg");
+		assert.ok(contrast(v["--look-text"], v["--look-surface"]) >= 4.5, "text on surface");
+		assert.ok(contrast(v["--look-accent"], v["--look-bg"]) >= 3, "accent on bg");
+	});
+}
+
+test("looks: any two differ in at least five variables, at least two of them colours", () => {
+	for (const [i, a] of LOOKS.entries()) {
+		for (const b of LOOKS.slice(i + 1)) {
+			const diff = VARS.filter((v) => looks[a].vars[v].toLowerCase() !== looks[b].vars[v].toLowerCase());
+			assert.ok(diff.length >= 5, `${a}/${b} differ in ${diff.length}`);
+			assert.ok(diff.filter((v) => COLOURS.includes(v)).length >= 2, `${a}/${b} differ in <2 colours`);
+		}
+	}
+});
